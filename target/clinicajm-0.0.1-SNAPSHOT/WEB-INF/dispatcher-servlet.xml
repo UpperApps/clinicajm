@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!-- was: <?xml version="1.0" encoding="UTF-8"?> -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+    
+    <!--    Informa que o Spring MVC deve procurar componentes injetáveis a partir do pacote br.com.javamagazine.clinicajm-->
+    <context:component-scan base-package="br.com.javamagazine.clinnicajm"/>
+
+    <!--    Define que os controllers da aplicação serão definidos através de anotação.-->
+    <mvc:annotation-driven/>
+    
+    <!--    Informa que a EntityManagerFactory (utilizada para se conseguir uma instância do EntityManager) 
+    será gerenciada pela LocalEntityManagerFactoryBean, uma classe do Spring.-->
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean"/>
+
+    <!--    Informa que o gerenciamento de transações com o banco de dados será feito pela classe
+    JPATransactionManager, uma vez que utilizaremos a JPA para o acesso.-->
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+    
+    <!--    Define que o controle de transações será feito através de anotações.-->
+    <tx:annotation-driven>
+
+        
+        <bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping"/>
+
+        <!--
+        Most controllers will use the ControllerClassNameHandlerMapping above, but
+        for the index controller we are using ParameterizableViewController, so we must
+        define an explicit mapping for it.
+        -->
+        <bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+            <property name="mappings">
+                <props>
+                    <prop key="index.htm">indexController</prop>
+                </props>
+            </property>
+        </bean>
+
+        <!--No Spring MVC, precisamos de um viewResolver para direcionar o usuário para uma tela após a execução da lógica no controller. A classe
+        UrlBasedViewResolver, é útil quando o nome dos arquivos das páginas é igual à String de retorno dos métodos (veremos mais à
+        frente que os métodos dos nossos controllers se comportarão desta forma).-->
+        <bean id="viewResolver"
+          class="org.springframework.web.servlet.view.UrlBasedViewResolver"
+          p:prefix="/WEB-INF/jsp/"
+          p:suffix=".jsp" />
+
+        <!--
+        The index controller.
+        -->
+        <bean name="indexController"
+          class="org.springframework.web.servlet.mvc.ParameterizableViewController"
+          p:viewName="index" />
+
+</beans>

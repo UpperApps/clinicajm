@@ -1,0 +1,27 @@
+package br.com.javamagazine.clinicajm.domain.enumeration;
+
+import java.io.Serializable;
+
+public enum Especialidade implements Serializable {
+
+ CARDIOLOGISTA("Cardiologista"),
+ CLINICO_GERAL("Clínico Geral"),
+ DERMATOLOGISTA("Dermatologista"),
+ OTORRINOLARINGOLOGISTA("Otorrinolaringologista"),
+ PEDIATRA("Pediatra"),
+ PNEUMOLOGISTA("Pneumologista");
+
+ private String descricao;
+
+ private Especialidade(String descricao){
+   this.descricao = descricao;
+  }
+
+ public String getDescricao() {
+   return descricao;
+ }
+
+ public void setDescricao(String descricao) {
+   this.descricao = descricao;
+ }
+}
